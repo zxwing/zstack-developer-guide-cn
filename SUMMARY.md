@@ -2,5 +2,5 @@
 
 * [Introduction](README.md)
 * [preface](introduction.md)
-* architecture.md
+* [architecture.md](architecturemd.md)
 
