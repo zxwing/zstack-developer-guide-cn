@@ -2,5 +2,5 @@
 
 * [Introduction](README.md)
 * [preface](introduction.md)
-* [architecture.md](architecturemd.md)
+* [in-process-microservices.md](architecturemd.md)
 
