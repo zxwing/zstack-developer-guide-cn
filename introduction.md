@@ -32,7 +32,7 @@ ZStack发布以来，已经得到越来越多的开源云计算爱好者的关�
 
 从定义上就可以知道，程序员是很难在在编写此类软件时获得愉悦感的。每个子系统都不受你控制，他们有的可能不提供API，有的是20年前的设计，有的BUG丛生，有的干脆就是猪设计。你要做的一切就是不断的粘合，不断想workaround，为了让整个系统能够完整而正常的工作，如果做的更好一点，健壮的工作。所以你明白为啥会没有愉悦感了，因为你总是在为别人的错误埋单，即使你已经在脑海里抱怨了一百遍：It's not my fault, it's the fucking system not having APIs，你还是得找出一条路让它能够跟你的程序集成起来。奋斗吧少年！含着眼泪帮别人把屁股擦完，写出高质量的code吧！
 
-在动手写第一行code之前，我花了数月的时间来思考架构，因为经历告诉我集成软件不好写。如你所知，我是CloudStack早起员工，在加入Cloud.com一年之后，我已经完成了诸如Overlay Network on Openvswitch、Baremetal as a Service等项目，对CloudStack的架构了然于心。这并不是说我很牛，而是CloudStack的代码耦合的很紧，如铁板一块，如果不至上而下的了解清楚所有细节，是无法完成老板交给我的任务的。
+在动手写第一行code之前，我花了数月的时间来思考架构，因为经历告诉我集成软件不好写。如你所知，我是CloudStack早期员工，在加入Cloud.com一年之后，我已经完成了诸如Overlay Network on Openvswitch、Baremetal as a Service等项目，对CloudStack的架构了然于心。这并不是说我很牛，而是CloudStack的代码耦合的很紧，如铁板一块，如果不至上而下的了解清楚所有细节，是无法完成老板交给我的任务的。
 
 2011年时Citrix收购了Cloud.com，OpenStack也在此时声名鹊起。作为OpenStack的早期贡献者，Citrix内部展开了一场关于真理的大讨论：继续投入OpenStack社区还是推刚2.3亿美金买来的CloudStack上位？老美的逻辑你永远不懂，刚花2.3亿美金买了个公司，不到一个月就开始讨论是不是刚买的东西不要了，把人全部转去做另一个开源项目。我当时都觉得人才真是太值钱了，2.3亿美金啊！后来回到天朝创业后我才知道，这事在天朝只要3000万美金就足够了，把下面干事的人全挖过来。扯远了。由于当时的大讨论很激烈，老大要求几位主架构师一个月内出一份OpenStack和CloudStack的技术对比报告，以供圣断。几位架构师都是CloudStack的创始工程师，结果可想而知，但平心而论，2011年的OpenStack还太早期，很多IaaS必备的功能都不齐全，Citrix选CloudStack从技术上讲并没有什么错误。也是接这个大讨论的机会，我花了大量时间学习研究OpenStack。当时它完全不同于CloudStack的架构设计让我觉得很新奇，我也跟打了鸡血似的读了很多关于SOA、关于微服务架构的书籍，像什么《Enterprise Integration Patterns》、《Service Oriented Architecture》等，还有一堆《xxx In Actions》的工具书。所以我对OpenStack的基础架构设计还是很了解的。
 
