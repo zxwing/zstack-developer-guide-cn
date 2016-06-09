@@ -43,7 +43,7 @@ zstack.message.服务名字.管理节点UUID
 
 ## 消息结构
 
-下图是ZStack中消息继承关系的总览：
+下图是ZStack中消息继承关系总览：
 
 ![](message.png)
 
