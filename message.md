@@ -27,5 +27,7 @@
 
 消息总线是ZStack的神经中枢，所有服务都依赖消息总线进行相互调用。在选择消息中间件时，我考察了JMS协议、AMQP协议和Zeromq，最终选择了基于AMQP协议的Rabbitmq。当时的考虑是zeromq还不成熟，提供的机制比较底层，不易于使用；JMS虽然成熟，但跟Java绑定，不符合ZStack消息总线于语言无关的原则，所以最终选择了AMQP协议的Rabbitmq。
 
-Rabbitmq可以负担20,000/s ~ 100,000/s的消息负载，并且提供灵活的路功能，生态中的插件和外围功能也非常齐全，完全满足ZStack控制面发送消息的要求。
+Rabbitmq可以负担20,000/s ~ 100,000/s的消息负载，并且提供灵活的路功能，生态中的插件和外围功能也非常齐全，完全满足ZStack控制面发送消息的要求。与OpenStack不同，ZStack并没有将所有的agent通信都用Rabbitmq，也没有使用dynamic queue这类资源消耗的技术，而是才用了static queue的方式，并且每个服务只会创建一个queue。在一个双管理节点的部署中，queue的总数不超过100个。
+
+
 
