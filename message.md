@@ -39,7 +39,7 @@ zstack.message.服务名字.管理节点UUID
 
 在著名的《Enterprise Integration Pattern》中描述了一种dynamic channel（这里的channel对应rabbitmq的queue），其工作原理是消息的发送者在发送一条消息(request)前创建一个临时queue，并把该queue作为消息回复（reply）的返回地址设置在消息中，接收者处理完消息后将回复发送到临时queue中，发送者处理完回复后动态销毁该临时queue。也就是说，每一次消息通信都会有一个临时queue创建/销毁的动作。程序员的直觉告诉我这种教科书式的设计在真实系统中会带来非常大的系统负载，从而导致不稳定。很不幸，OpenStack的oslo.messaging中大量使用了dynamicc queue，导致其消息系统在高负载时非常不稳定。ZStack中的所有queue都是静态的，在高负载情况下（并发数万API）也能稳定工作。
 
->开发者可以在安装rabbitmq的机器上运行`rabbitmqctl list_queues`和`rabbitmqctl list_exchanges·查看ZStack所创建的queue和exchange
+>开发者可以在安装rabbitmq的机器上运行`rabbitmqctl list_queues`和`rabbitmqctl list_exchanges`查看ZStack所创建的queue和exchange
 
 ## 消息结构
 
