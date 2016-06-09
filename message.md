@@ -49,7 +49,13 @@ zstack.message.服务名字.管理节点UUID
 
 ZStack中所有消息（包括request和reply）都源于一个根class: [Message.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/Message.java)，它派生出的子类又包含下列几大类：
 
-* **[Event.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/Event.java)**: 事件，用于广播，所有订阅该事件的服务都能收到该事件的一份拷贝。
-  * **[APIEvent.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/APIEvent.java)： 代表API返回的event
-* **[NeedReplyMessage.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/NeedReplyMessage.java)**：需要回复消息请求，用于服务之间点对点通信。
+* **[Event.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/Event.java)**: 事件，用于广播，所有订阅该事件的服务都能收到该事件的一份拷贝
+  * **[APIEvent.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/APIEvent.java)**： 代表API返回的event
+  * **[LocalEvent.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/LocalEvent.java)：除API返回外的其它事件
+* **[NeedReplyMessage.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/NeedReplyMessage.java)**：需要回复消息请求，用于服务之间点对点通信
   * **[APIMessage.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/APIMessage.java)**：代表API的消息请求
+  * **Others**：需要回复的非API消息
+* **[MessageReply.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/MessageReply.java)**：消息回复
+  * **[APIReply.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/APIReply.java)**：API回复
+  * **Others**：非API回复
+* **Others**：所有不需要回复的非API消息
