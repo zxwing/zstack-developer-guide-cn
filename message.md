@@ -36,3 +36,5 @@ ZStack消息总线包含两个Rabbitmq exchange，`BROADCAST`和`P2P`，前者�
 zstack.message.服务名字.管理节点UUID
 ```
 例如`zstack.message.cluster.3a8e2ef4ab264e9caad8870b233437b2`。
+
+在著名的《Enterprise Integration Pattern》中描述了一种dynamic channel（这里的channel对应rabbitmq的queue），其工作原理是消息的发送者在发送一条消息(request)前创建一个临时queue，并把该queue作为消息回复（reply）的返回地址设置在消息中，接收者处理完消息后讲返回发送到临时queue中，发送者处理完返回后动态销毁该临时queue。
