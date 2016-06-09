@@ -59,3 +59,17 @@ ZStack中所有消息（包括request和reply）都源于一个根class: [Messag
   * **[APIReply.java](https://github.com/zstackorg/zstack/blob/787402c53d9749ab6e18add656d797750549ea82/header/src/main/java/org/zstack/header/message/APIReply.java)**：API回复
   * **Others**：非API回复
 * **Others**：所有不需要回复的非API消息
+
+>**类型信息 —— 编译器的礼物**
+>
+>当你浏览ZStack消息的继承关系时，将发现很多消息继承了它的父类但却没有增加任何字段。例如APIReply.java：
+>
+>     package org.zstack.header.message;
+>
+>     public class APIReply extends MessageReply {
+>     }
+>  
+>继承了父类Message.java，但并没有定义额外字段。看似APIRely跟父类完全亦一样，但这并非画蛇添足或者over engineering。实际上APIReply.java包含了非常重要的隐藏内容：类型信息。由于类型信息的存在，所有继承APIRely的class都自动表面了作为API回复的身份，无需我们添加额外字段说明。
+>
+>类型信息是编译器和面向对象编程送给程序员的礼物，它让我们无需在class中定义一个type字段来说明该class的用途。在Java中除了使用继承，还可以通过implement空interface给class添加多个类型信息。善用这些手段可以给OOP编程带来极大的方便，我们在后续的章节讲到服务入口时就能看到。
+
