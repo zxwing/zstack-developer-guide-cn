@@ -74,7 +74,7 @@ ZStack中所有消息（包括request和reply）都源于一个根class: [Messag
 >
 >类型信息是编译器和面向对象编程送给程序员的礼物，它让我们无需在class中定义一个type字段来说明该class的用途。除了使用继承，在Java中还可以通过implement空interface给class添加多个类型信息。善用这些手段可以给OOP编程带来极大的方便，我们在后续的章节讲到服务入口时就会看到。
 
-#### 按发送方式分类
+### 按发送方式分类
 
 根据发送方式的不同，消息可以分为event和非event两种。对于event类消息，其发送接收方式为publish/subscribe，对该event感兴趣的服务在消息总线上订阅该event，发送者只需将event提交到总线，所有订阅者都会收到一份event的拷贝。例如
 
@@ -86,13 +86,13 @@ bus.publish(evt);
 
 非event类消息使用点对点通信，发送者需要在消息中指定接收者的`serviceId`，接收者在处理完消息后通过一个`MessageReply`返回结果给发送者。非event类消息是ZStack中使用最多的消息，主要用于服务间通信以及阻塞式API。
 
-#### 按是否需要回复分类
+### 按是否需要回复分类
 
 绝大多数ZStack消息请求需要回复，这类消息必须继承父类`NeedReplyMessage`。服务在处理完类型为`NeedReplyMesssage`类消息后必须发送一个回复，通常`MessageReply`的子类或者`APIEvent`的子类。
 
 不需要回复的消息请求可以直接继承父类`Message`。这类消息主要用于要求接收者执行某项操作，但发送者并不关心操作执行的结果。例如`ReturnPrimaryStorageCapacityMsg`用于向primary storage归还容量，但发送者并不关心执行结果，因为primary storage服务应该保证容量归还始终成功。
 
-#### 按是否为API分类
+### 按是否为API分类
 
 继承父类`APIMessage`的消息带有API属性，它们跟非API消息最大的不同是，API消息的回复可以是一个event类消息（APIEvent）或一个非event类消息（APIReply），取决于API是阻塞类API还是非阻塞类API。
 
