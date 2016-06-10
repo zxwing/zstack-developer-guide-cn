@@ -110,8 +110,8 @@ bus.publish(evt);
 
 | 字段| 描述 |
 | -- | -- |
-| *id*| UUIDv4字符串，唯一标识一个message |
-| *serviceId* | 接受服务的名称 |
+| **id**| UUIDv4字符串，唯一标识一个message |
+| **serviceId** | 接收服务的名称 |
 | headers | 消息的metadata，消息总线使用的内部信息，用户无需关心 |
 | timeout | 消息超时时间，单位毫秒 |
 | createdTime | 消息的创建时间，Unix Epoch Time，精确到毫秒 |
