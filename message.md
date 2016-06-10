@@ -106,7 +106,7 @@ bus.publish(evt);
 
 ![](createzonemessage.png)
 
-`APICreateZone`消息具有多层继承关系，故除了包含自身定义的`name`和`description`两个字段外，还包含APIMessage特定的字段`session`以及根类`Message`的若干字段。我们来看看根类字段的定义：
+`APICreateZoneMsg`消息具有多层继承关系，故除了包含自身定义的`name`和`description`两个字段外，还包含APIMessage特定的字段`session`以及根类`Message`的若干字段。我们来看看根类字段的定义：
 
 | 字段| 描述 |
 | --- | --- |
