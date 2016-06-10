@@ -109,7 +109,7 @@ bus.publish(evt);
 `APICreateZone`消息具有多层继承关系，故除了包含自身定义的`name`和`description`两个字段外，还包含APIMessage特定的字段`session`以及根类`Message`的若干字段。我们来看看根类字段的定义：
 
 | 字段| 描述 |
-| -- | -- |
+| --- | --- |
 | **id**| UUIDv4字符串，唯一标识一个message |
 | **serviceId** | 接收服务的名称 |
 | headers | 消息的metadata，消息总线使用的内部信息，用户无需关心 |
