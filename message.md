@@ -112,9 +112,9 @@ bus.publish(evt);
 | --- | --- |
 | **id**| UUIDv4字符串，唯一标识一个message |
 | **serviceId** | 接收服务的名称 |
-| headers | 消息的metadata，消息总线使用的内部信息，用户无需关心 |
-| timeout | 消息超时时间，单位毫秒 |
-| createdTime | 消息的创建时间，Unix Epoch Time，精确到毫秒 |
+| headers | metadata，消息总线使用的内部信息，用户无需关心 |
+| timeout | 超时时间，单位毫秒 |
+| createdTime | 创建时间，Unix Epoch Time，精确到毫秒 |
 
 其中`id`和`serviceId`两个字段最为重要，它们决定了消息如何发送和接收，在后面的小节中会具体介绍。
 
