@@ -96,10 +96,8 @@ bus.publish(evt);
 
 继承父类`APIMessage`的消息带有API属性，它们跟非API消息最大的不同是，API消息的回复可以是一个event类消息（APIEvent）或一个非event类消息（APIReply），取决于API是阻塞类API还是非阻塞类API。
 
+阻塞类API通常是*读*API，例如`APIQueryVmInstanceMsg`，调用者通常需要得到API的返回结果，才能执行后续的逻辑。阻塞类API的回复是一个`APIReply`，由API的执行者直接发送给API的调用者。
 
+非阻塞类API通常执行某个操作，例如`APIStartVmInstanceMsg`，调用者无需等待API返回也可以执行后续逻辑。API执行者在完成操作后，通过一个`APIEvent`异步通知调用者。由于返回结果是一个event类消息，除API调用者外，其他服务也可以订阅API event来获知API执行的结果，例如对API执行结果进行审计的服务。
 
-
-###　API消息
-
-ZStack所有API都是以消息实现的，每个服务都可以定义自己的API。API消息的
 
