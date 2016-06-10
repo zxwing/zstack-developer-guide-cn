@@ -100,4 +100,5 @@ bus.publish(evt);
 
 非阻塞类API通常执行某个操作，例如`APIStartVmInstanceMsg`，调用者无需等待API返回也可以执行后续逻辑。API执行者在完成操作后，通过一个`APIEvent`异步通知调用者。由于返回结果是一个event类消息，除API调用者外，其他服务也可以订阅API event来获知API执行的结果，例如对API执行结果进行审计的服务。
 
+## 消息结构
 
