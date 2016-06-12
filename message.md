@@ -118,4 +118,6 @@ bus.publish(evt);
 
 其中`id`和`serviceId`两个字段最为重要，它们决定了消息如何发送和接收，在后面的小节中会具体介绍。
 
+如上图所示，ZStack的消息以JSON文本的方式在消息总线上传递，其结构是一个嵌套的map：Map<String, Map<String, Object>>，最外层的的map只有一个元素，key是消息的Java全名，value是一个代表消息body的map。
+
 
