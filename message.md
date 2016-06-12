@@ -146,9 +146,13 @@ bus.publish(evt);
 >        
 >        String jsonString = toJsonString(json);
 >        JSONObject newJsonObject = toJsonObject(jsonString, JSONObject.class);
->在这个例子中，我们将一个`JSONObject`对象转换成JSON文本再还原回来后，其成员变量的类型信息就全部丢失了，`parents` List中包含的不在是一个`Parent`对象，而是一个Map；`child`字段包含的也在是`Child`对象，而是它的父类对象`Parent`。Java对于这个问题并没有什么好办法，我每隔一段时间就会以`java json type info`，`java json schema`等关键字google，看有么有什么新技术出现。到我写这篇文档为止，no luck。
+>在这个例子中，我们将一个`JSONObject`对象转换成JSON文本再还原回来后，其成员变量的类型信息就全部丢失了，`parents` List中包含的不在是一个`Parent`对象，而是一个Map；`child`字段包含的也在是`Child`对象，而是它的父类对象`Parent`。Java对于这个问题并没有什么好办法，我每隔一段时间就会以`java json type info`，`java json schema`等关键字google，看有么有什么新技术出现。到我写这篇文档为止，no luck。（如果你有什么好办法，一定要告诉我）。
 >
->Java处理这种问题有两个办法，一是为这样的class写decoder，太繁琐，违背懒是科技进步第一动力的原则；第二是使用Jackson这样的库，在父类上使用annotation指明它可能有哪些子类，但这又违反了信息至上而下的设计原则，即父类的作者是不应该也不能够预测到它会有哪些子类的。
+>Java处理这种问题有两个办法，一是为这样的class写decoder，太繁琐，违背懒是科技进步第一动力的原则；第二是使用Jackson这样的库，在父类上使用annotation指明它可能有哪些子类，但这又违反了信息至上而下的设计原则，即父类的作者是不应该也不能够预测到它会有哪些子类的。所以我自创了第三种方法，在Object转换成JSON文本时，将成员变量的类型编码进去，例如：
+>![](json.png)
+>这里我们在消息的`header.schema`部分存放成员变量的类型信息，可以看到`inventory`是*org.zstack.header.vm.VmInstanceInventory`，`inventory.vmNics`是一个list，其第一个元素是*org.zstack.header.vm.VmNicInventory*类型，`inventory.allVolumes`的也是一个list，第一个元素是*org.zstack.header.volume.VolumeInventory*类型。这样在还原JSON文本是，我们就可以知道List，Map内部对象的类型，也可以保留集成对象的类型信息。
+>
+>故事还是没有结束，这种方法无法处理Set这样的无顺序集合，因为在生成schema的时候无法用下标[0],[1]...[n]对元素位置编码。所以在ZStack中, Set在消息中是被禁止的类型。
 
 ## CloudBus
 
