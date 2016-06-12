@@ -118,15 +118,16 @@ bus.publish(evt);
 
 其中`id`和`serviceId`两个字段最为重要，它们决定了消息如何发送和接收，在后面的小节中会具体介绍。
 
-如上图所示，ZStack的消息以JSON文本的方式在消息总线上传递，其结构是一个嵌套的map：Map<String, Map<String, Object>>，最外层的的map只有一个元素，key是消息的Java全名，value是一个代表消息body的map。这样设计是为了让消息的接收者可以通过消息的Java全名将JSON文本恢复成对应的Java Object。
+如上图所示，ZStack的消息以JSON文本的形势在总线上传递，其结构是一个嵌套的map：`Map<String, Map<String, Object>>`，最外层的的map只有一个元素，key是消息的Java全名，value是一个代表消息body的map。这样设计是为了让消息的接收者可以通过消息的Java全名将JSON文本恢复成对应的Java Object。
 
 >**JSON: 丢失的信息**
 >
->要问我写程序最讨厌的事情，那一定是参数传递。我一直认为参数传递的程序BUG一大源头。参数传递的路径越长、层级越深，程序的BUG就越多。我们的程序有一大半时间是在各种层级之间传递参数，或者是跟外部进程交换参数。每一次传递大都带有一定程度的信息损失，因为你不大可能在各个层级间传递同样的参数，一定会有某种程度的提取、封装、打包等动作，传递给一个层级的参数往往是这个层级所需要知道的最小信息，而不是全部信息。参数传递的信息损失一方面是人为造成的，例如一个读数据库的API，其身份验证完成后，传递给数据库层的参数中通常就不再需要包含身份信息了；另一方面是数据通信格式造成的，JSON就是个典型。
+>要问我写程序最讨厌的事情，那一定是参数传递。我一直认为参数传递的程序BUG一大源头。参数传递的路径越长、层级越深，程序的BUG就越多。我们的程序有一大半时间是在各种层级之间传递参数，或者是跟外部进程交换参数。每一次传递通常都带有一定程度的信息损失，因为你不大可能在各个层级间传递同样的参数，都会有某种程度的提取、封装、打包等动作，传递给一个层级的参数往往是这个层级所需要知道的最小信息，而不是全部信息。这里的信息损失一方面是人为造成的，例如一个读数据库的API，其身份验证完成后，传递给数据库层的参数通常就不再需要包含身份信息了；另一方面是数据通信格式造成的，JSON就是个典型。
 >
->JSON是一种弱类型的数据格式，本身并不带类型信息。这对Java这样的强类型语言就比较痛苦了，因为一个Java object转换成JSON文本后会丢失所有的编译器信息，包括最重要的类型信息。这就导致Java库（例如GSON）在将一个JSON文本还原成Object的时候，在不指定object class的情况下只能还原成一个HashMap。在指定object class的情况下，JSON文本可以还原成该class对应的object（这里就要表扬一下Java的GSON库了，至少没有强迫程序员为每个用户类定义一个decoder。相反Python作为弱类型语言，其默认的Json库居然要求给每个用户类写decoder，否则只能还原成dict类型）。所以在我们的消息结构中，我们将消息的class name编码到了JSON文本中，这样在还原时我们就可以把JSON文本生成对应的object。例如在上面的图中，该JSON文本会被还原成`org.zstack.header.zone.APICreateZoneMsg`对象。
+>JSON是一种弱类型的数据格式，本身并不带类型信息。对Java这样的强类型语言就比较痛苦了，因为一个Java对象转换成JSON文本后会丢失所有的编译器信息，包括最重要的类型信息。这就导致Java库（例如GSON）在将一个JSON文本还原成对象时，在不指定对象类型的情况下只能还原成一个Map。在指定对象类型的情况下，JSON文本可以还原成该类型对应的对象（这里就要表扬一下Java的GSON库了，至少没有强迫程序员为每个用户类定义一个decoder。相反Python作为弱类型语言，其默认的Json库居然要求给每个用户类写decoder，否则只能还原成dict类型）。所以在ZStack的消息结构中，我将消息的class name编码到了JSON文本中，这样我们就可以把JSON文本还原成对应的消息对象了。例如在上面的图中，该JSON文本会被还原成*org.zstack.header.zone.APICreateZoneMsg*对象。
 >
->但故事到此并没有结束，虽然通过编码class name到JSON文本只解决的最外层object的类型问题，当object内部包含List, Map这样的集合，或者包含带继承信息的成员变量时，这些类型信息都将丢失。例如下面这个例子：
+>但故事到此并没有结束，编码class name到JSON文本只解决最外层对象的类型问题，当对象内部包含List, Map这样的集合，或者包含带继承信息的成员变量时，这些类型信息都将丢失。例如下面这个例子：
+>
 >        class Parent {
 >            int a;
 >        }
@@ -146,9 +147,9 @@ bus.publish(evt);
 >        
 >        String jsonString = toJsonString(json);
 >        JSONObject newJsonObject = toJsonObject(jsonString, JSONObject.class);
->在这个例子中，我们将一个`JSONObject`对象转换成JSON文本再还原回来后，其成员变量的类型信息就全部丢失了，`parents` List中包含的不在是一个`Parent`对象，而是一个Map；`child`字段包含的也在是`Child`对象，而是它的父类对象`Parent`。Java对于这个问题并没有什么好办法，我每隔一段时间就会以`java json type info`，`java json schema`等关键字google，看有么有什么新技术出现。到我写这篇文档为止，no luck。（如果你有什么好办法，一定要告诉我）。
+>在这个例子中，我们将一个`JSONObject`对象转换成JSON文本再还原回来，其成员变量的类型信息就全部丢失了，`parents` List中包含的不再是一个`Parent`对象，而是一个Map；`child`字段包含的也不是`Child`对象，而是它的父类对象`Parent`。Java对于这个问题并没有什么好办法，我每隔一段时间就会以`java json type info`，`java json schema`等关键字google，看有无新技术出现。到我写这篇文档为止，no luck。（如果你有什么好办法，一定要告诉我）。
 >
->Java处理这种问题有两个办法，一是为这样的class写decoder，太繁琐，违背懒是科技进步第一动力的原则；第二是使用Jackson这样的库，在父类上使用annotation指明它可能有哪些子类，但这又违反了信息至上而下的设计原则，即父类的作者是不应该也不能够预测到它会有哪些子类的。所以我自创了第三种方法，在Object转换成JSON文本时，将成员变量的类型编码进去，例如：
+>Java处理这种问题有两个办法，一是为这样的class写decoder，太繁琐，违背懒是科技进步第一动力的原则；第二是使用Jackson这样的库，在父类上使用annotation指明它可能有哪些子类，但这又违反了信息至上而下的设计原则，即父类的作者是不应该也不能够预测它会有哪些子类的。所以我自创了第三种方法，在Object转换成JSON文本时将成员变量的类型编码进去，例如：
 >![](json.png)
 >这里我们在消息的`header.schema`部分存放成员变量的类型信息，可以看到`inventory`是*org.zstack.header.vm.VmInstanceInventory*，`inventory.vmNics`是一个list，其第一个元素是*org.zstack.header.vm.VmNicInventory*类型，`inventory.allVolumes`的也是一个list，第一个元素是*org.zstack.header.volume.VolumeInventory*类型。这样在还原JSON文本时，我们就可以知道List，Map内部对象的类型，也可以保留继承对象的类型信息。
 >
