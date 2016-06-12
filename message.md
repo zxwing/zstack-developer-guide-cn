@@ -150,9 +150,9 @@ bus.publish(evt);
 >
 >Java处理这种问题有两个办法，一是为这样的class写decoder，太繁琐，违背懒是科技进步第一动力的原则；第二是使用Jackson这样的库，在父类上使用annotation指明它可能有哪些子类，但这又违反了信息至上而下的设计原则，即父类的作者是不应该也不能够预测到它会有哪些子类的。所以我自创了第三种方法，在Object转换成JSON文本时，将成员变量的类型编码进去，例如：
 >![](json.png)
->这里我们在消息的`header.schema`部分存放成员变量的类型信息，可以看到`inventory`是*org.zstack.header.vm.VmInstanceInventory`，`inventory.vmNics`是一个list，其第一个元素是*org.zstack.header.vm.VmNicInventory*类型，`inventory.allVolumes`的也是一个list，第一个元素是*org.zstack.header.volume.VolumeInventory*类型。这样在还原JSON文本是，我们就可以知道List，Map内部对象的类型，也可以保留集成对象的类型信息。
+>这里我们在消息的`header.schema`部分存放成员变量的类型信息，可以看到`inventory`是*org.zstack.header.vm.VmInstanceInventory*，`inventory.vmNics`是一个list，其第一个元素是*org.zstack.header.vm.VmNicInventory*类型，`inventory.allVolumes`的也是一个list，第一个元素是*org.zstack.header.volume.VolumeInventory*类型。这样在还原JSON文本时，我们就可以知道List，Map内部对象的类型，也可以保留继承对象的类型信息。
 >
->故事还是没有结束，这种方法无法处理Set这样的无顺序集合，因为在生成schema的时候无法用下标[0],[1]...[n]对元素位置编码。所以在ZStack中, Set在消息中是被禁止的类型。
+>故事还是没有结束，这种方法无法处理Set这样的无顺序集合，因为生成schema的时无法用下标[0],[1]...[n]编码元素位置。所以在ZStack中, 消息中不能使用Set类型。
 
 ## CloudBus
 
